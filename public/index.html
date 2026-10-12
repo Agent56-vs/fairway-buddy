@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#0e2147" media="(prefers-color-scheme: dark)"><meta name="format-detection" content="telephone=no">
+<title>Fairway Buddy</title>
+<style>
+:root{box-sizing:border-box;--bg:#f2f5fa;--card:#fff;--ink:#0b1f44;--mut:#5a6b8c;--pri:#1b4fb0;--gold:#c9a227;--goldt:#7a5f00;--line:#dbe3f1;--onpri:#fff;--seg:#e3e8f2}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#06122a;--card:#0e2147;--ink:#eaf0fc;--mut:#96a8cc;--pri:#6b9bf5;--gold:#e2bb4a;--goldt:#e2bb4a;--line:#1d3566;--onpri:#06143a;--seg:#1a2f5c}}
+:root[data-theme="dark"]{--bg:#06122a;--card:#0e2147;--ink:#eaf0fc;--mut:#96a8cc;--pri:#6b9bf5;--gold:#e2bb4a;--goldt:#e2bb4a;--line:#1d3566;--onpri:#06143a;--seg:#1a2f5c}
+html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.4 -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",system-ui,sans-serif;touch-action:manipulation;overscroll-behavior-y:none}
+svg.i{width:1.2em;height:1.2em;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.2em;flex:none}
+.logo{height:42px;width:183px;color:var(--ink);display:block}
+.logo.big{height:62px;width:270px;margin:0 auto 18px}
+main{max-width:640px;margin:0 auto;padding:calc(16px + env(safe-area-inset-top,0px)) 16px calc(130px + env(safe-area-inset-bottom,0px))}
+.banner{width:100vw;position:relative;left:50%;margin:calc(-16px - env(safe-area-inset-top,0px)) 0 14px -50vw;padding:calc(10px + env(safe-area-inset-top,0px)) 0 10px;background:var(--card);border-bottom:.5px solid var(--line)}
+.banner .bi{max-width:640px;margin:0 auto;padding:0 16px}
+.lt{font:800 2rem/1.1 -apple-system,BlinkMacSystemFont,"SF Pro Display",system-ui,sans-serif;margin:6px 0 14px;letter-spacing:-.3px}
+h2{font:700 1.08rem -apple-system,system-ui,sans-serif;margin:0 0 8px;display:flex;align-items:center;gap:8px}
+h2 svg{color:var(--gold)}
+.gh{font-size:.78rem;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);margin:20px 8px 7px}
+.card{background:var(--card);border-radius:14px;padding:16px;margin-bottom:12px;border:.5px solid var(--line)}
+.who{display:flex;align-items:center;gap:14px;margin:4px 0 0}
+.who .av{width:60px;height:60px;font-size:1.6rem}
+.who b{font-size:1.3rem;display:block}
+.av{border-radius:50%;display:inline-grid;place-items:center;font-weight:700;background:var(--pri);color:var(--onpri)}
+nav{position:fixed;left:0;right:0;bottom:0;display:flex;align-items:flex-start;height:calc(68px + env(safe-area-inset-bottom,0px));background:color-mix(in srgb,var(--card) 88%,transparent);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border-top:.5px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px);z-index:25}
+nav button{flex:1;border:0;background:none;color:var(--mut);padding:10px 2px 6px;font:inherit;font-size:.78rem;min-width:0;cursor:pointer;min-height:60px}
+nav button svg{display:block;margin:0 auto 3px;width:1.9rem;height:1.9rem}
+nav button.on{color:var(--pri);font-weight:700}
+.plus{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 16px);transform:translateX(-50%);z-index:30;width:78px;height:78px;border-radius:50%;background:var(--gold);color:#1a1400;padding:0;border:4px solid var(--bg);box-shadow:0 4px 14px rgba(11,42,91,.4);display:grid;place-items:center;cursor:pointer;touch-action:manipulation}
+.plus svg{width:36px;height:36px;margin:0;stroke-width:2.8}
+.tab{display:none}.tab.on{display:block}
+.nop nav,.nop .tab,.nop .plus{display:none!important}
+#welcome{display:none;text-align:center;padding-top:6vh}.nop #welcome{display:block}
+#welcome .card{text-align:left}
+.btn{border:0;border-radius:12px;background:var(--pri);color:var(--onpri);font:inherit;font-weight:600;padding:0 18px;min-height:46px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.btn.gold{background:var(--gold);color:#1a1400}
+.btn.alt{background:none;color:var(--pri);border:1.5px solid var(--pri)}
+.btn.sm{min-height:42px;font-size:.95rem;padding:0 14px}
+.btn.full{width:100%}
+.btn:disabled{opacity:.45;cursor:default}
+.chip{display:inline-block;border:1.5px solid var(--line);border-radius:99px;padding:10px 16px;margin:0 6px 8px 0;cursor:pointer;background:none;color:var(--ink);font:inherit;font-size:.95rem}
+input[type=text],input:not([type]),textarea{width:100%;border:1px solid var(--line);border-radius:12px;padding:12px;font:inherit;font-size:17px;background:var(--bg);color:var(--ink);min-height:46px}
+textarea{min-height:96px;resize:vertical}
+label.note{display:block;margin-bottom:5px}
+.seg{display:flex;background:var(--seg);border-radius:10px;padding:2px;margin:6px 0}
+.seg button{flex:1;border:0;background:none;color:var(--ink);font:inherit;font-size:.95rem;padding:9px;border-radius:8px;cursor:pointer}
+.seg button.on{background:var(--card);font-weight:700;box-shadow:0 1px 3px rgba(0,0,0,.18)}
+video{width:100%;border-radius:12px;background:#000;max-height:60vh;object-fit:contain}
+.meter{height:10px;border-radius:9px;background:var(--line);overflow:hidden;margin:6px 0}
+.meter i{display:block;height:100%;border-radius:9px;background:linear-gradient(90deg,var(--pri),var(--gold));transition:width .8s}
+.meter.lg{height:14px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.note{font-size:.84rem;color:var(--mut)}
+.err{color:#c0392b}
+.tip{border-left:3px solid var(--gold);padding:4px 10px;margin:2px 0 14px;font-size:.98rem}
+.drill{border:.5px solid var(--line);border-radius:12px;padding:12px;margin:10px 0}
+.drill.done{opacity:.55}
+.sw{display:flex;gap:12px;border:.5px solid var(--line);border-radius:12px;padding:10px;margin:10px 0;align-items:center}
+.sw img{width:90px;height:68px;object-fit:cover;border-radius:8px;background:#000;flex:none}
+.sw img.p{width:68px;height:90px}
+.sw .b{flex:1;min-width:0}
+.stat{display:flex;gap:10px}.stat div{flex:1;text-align:center;background:var(--bg);border-radius:12px;padding:10px;font-size:.8rem;color:var(--mut)}
+.stat b{display:block;font:800 1.7rem -apple-system,system-ui,sans-serif;color:var(--pri)}
+.badges{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.badge{border:.5px solid var(--line);border-radius:14px;padding:12px;background:var(--bg)}
+.badge .ic{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:var(--line);color:var(--mut);margin-bottom:8px}
+.badge .ic svg{width:24px;height:24px}
+.badge b{display:block;font-size:.95rem}
+.badge.on{border-color:var(--gold);background:linear-gradient(160deg,var(--card),color-mix(in srgb,var(--gold) 16%,var(--card)))}
+.badge.on .ic{background:linear-gradient(135deg,#f0d36c,var(--gold));color:#1a1400}
+.badge.on.lg .ic{background:linear-gradient(135deg,#0b2a5b,#1b4fb0);color:#e2bb4a;box-shadow:0 0 0 3px var(--gold)}
+.badge .d{font-size:.78rem;color:var(--mut);margin:2px 0 6px}
+.badge .meter{height:6px;margin:0}
+details{border-top:.5px solid var(--line);padding:12px 0}
+summary{font-weight:600;list-style:none;display:flex;justify-content:space-between;cursor:pointer;min-height:26px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"\203A";color:var(--mut);font-size:1.4rem;line-height:1;transition:transform .2s}
+details[open] summary::after{transform:rotate(90deg)}
+details p,details li{font-size:.9rem;color:var(--mut);margin:8px 0 0}
+details ol{padding-left:20px;margin:0}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(112px + env(safe-area-inset-bottom,0px));background:#0b2a5b;color:#fff;border:1.5px solid var(--gold);border-radius:14px;padding:11px 16px;display:none;z-index:60;max-width:92%;font-size:.95rem}
+.scr{position:fixed;inset:0;background:var(--bg);z-index:35;overflow-y:auto;padding:env(safe-area-inset-top,0px) 16px calc(28px + env(safe-area-inset-bottom,0px));animation:up .25s ease-out}
+.bar{position:sticky;top:0;background:var(--bg);display:flex;justify-content:space-between;align-items:center;padding:12px 0;z-index:2}
+.bar b{font-size:1.05rem}.bar button{border:0;background:none;color:var(--pri);font:inherit;font-weight:600;font-size:1.05rem;padding:8px 4px;cursor:pointer}
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.28);z-index:20}
+.sheet{position:absolute;left:50%;width:min(300px,calc(100% - 32px));transform:translateX(-50%);animation:pop .2s ease-out;box-shadow:0 8px 28px rgba(0,0,0,.3);border-radius:14px}
+@keyframes pop{from{transform:translate(-50%,14px);opacity:0}to{transform:translate(-50%,0);opacity:1}}
+@keyframes up{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+.grp{background:var(--card);border-radius:14px;overflow:hidden}
+.grp .ttl{padding:12px;text-align:center;font-size:.82rem;color:var(--mut);border-bottom:.5px solid var(--line)}
+.grp button,.grp .act,.cancel{-webkit-user-select:none;user-select:none;width:100%;display:flex;align-items:center;justify-content:center;gap:10px;min-height:58px;border:0;background:none;color:var(--pri);font:inherit;font-size:1.1rem;cursor:pointer}
+.grp .act+.act{border-top:.5px solid var(--line)}
+.cancel{margin-top:8px;background:var(--card);border-radius:14px;font-weight:700}
+.cat summary>span:first-child{flex:1;display:flex;align-items:center;gap:8px}
+.cat summary .note{margin-right:8px}
+.cat .drill p{font-size:1rem;color:var(--ink)}
+.cat .drill p.note{font-size:.84rem;color:var(--mut)}
+.ng{flex:1;display:flex;min-width:0;height:68px}
+.gap{flex:0 0 104px}
+.plus svg{transition:transform .2s}.plus.open svg{transform:rotate(45deg)}
+.rate{display:flex;gap:6px}.rate .btn{flex:1;padding:0 6px;font-size:.88rem}
+.pill{font-size:.75rem;padding:3px 10px;border-radius:99px;background:var(--bg);border:.5px solid var(--line);color:var(--mut);white-space:nowrap}
+body{overflow-x:hidden}
+.scr>*{max-width:640px;margin-left:auto;margin-right:auto}
+.vh{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;left:-9999px}
+.nt{display:flex;gap:8px;align-items:center;border:.5px solid var(--line);border-radius:12px;padding:10px 4px 10px 12px;margin:8px 0}
+.nt .b{flex:1;min-width:0;font-size:.95rem}
+.ib{border:0;background:none;color:var(--mut);padding:8px;cursor:pointer;min-width:44px;min-height:44px;display:grid;place-items:center}
+details.log{border:0;padding:10px 0 0}
+details.log li{margin:4px 0 0}
+.two{display:flex;gap:8px}.two .btn{flex:1}
+</style></head>
+<body>
+<svg width="0" height="0" style="position:absolute"><defs>
+<symbol id="logo" viewBox="0 0 226 52"><defs><clipPath id="lc"><circle cx="26" cy="26" r="23"/></clipPath></defs>
+<circle cx="26" cy="26" r="24" fill="#0b2a5b"/>
+<g clip-path="url(#lc)"><path d="M0 37Q22 27 52 33V52H0Z" fill="#2f6fd6"/><path d="M0 42Q24 34 52 40V52H0Z" fill="#1b4fb0"/></g>
+<circle cx="26" cy="26" r="23.5" fill="none" stroke="#e2bb4a" stroke-width="1.6"/>
+<path d="M38 13v22" stroke="#e2bb4a" stroke-width="1.8" stroke-linecap="round"/><path d="M38 13l7 3.2-7 3.2z" fill="#e2bb4a"/>
+<path d="M21 32h6l-1.3 7h-3.4z" fill="#e2bb4a"/>
+<circle cx="24" cy="22" r="10.5" fill="#fff"/>
+<circle cx="20.8" cy="20.5" r="1.5" fill="#0b2a5b"/><circle cx="27.2" cy="20.5" r="1.5" fill="#0b2a5b"/>
+<path d="M20.3 24.6q3.7 3.6 7.4 0" fill="none" stroke="#0b2a5b" stroke-width="1.7" stroke-linecap="round"/>
+<text x="60" y="34" font-family="ui-rounded,'SF Pro Rounded','Avenir Next',system-ui,sans-serif" font-size="27" font-weight="800" textLength="162" lengthAdjust="spacingAndGlyphs"><tspan fill="currentColor">Fairway </tspan><tspan fill="#cfa32a">Buddy</tspan></text></symbol>
+<symbol id="video" viewBox="0 0 24 24"><path d="m22 8-6 4 6 4V8Z"/><rect x="2" y="6" width="14" height="12" rx="2"/></symbol>
+<symbol id="camera" viewBox="0 0 24 24"><path d="M3 8a2 2 0 0 1 2-2h2l2-2h6l2 2h2a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="12" cy="13" r="4"/></symbol>
+<symbol id="film" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 4v16M17 4v16M3 9h4M3 15h4M17 9h4M17 15h4"/></symbol>
+<symbol id="clip" viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="17" rx="2"/><path d="M9 3h6v3H9zM9 12h6M9 16h4"/></symbol>
+<symbol id="trophy" viewBox="0 0 24 24"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4Z"/><path d="M7 6H4v2a3 3 0 0 0 3 3M17 6h3v2a3 3 0 0 1-3 3"/></symbol>
+<symbol id="flag" viewBox="0 0 24 24"><path d="M5 22V3"/><path d="M5 4h13l-3 4 3 4H5"/></symbol>
+<symbol id="check" viewBox="0 0 24 24"><path d="m5 12 5 5 9-10"/></symbol>
+<symbol id="lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
+<symbol id="target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></symbol>
+<symbol id="trend" viewBox="0 0 24 24"><path d="m3 17 6-6 4 4 8-9"/><path d="M15 6h6v6"/></symbol>
+<symbol id="shield" viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6l-8-3Z"/></symbol>
+<symbol id="zap" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/></symbol>
+<symbol id="cal" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></symbol>
+<symbol id="crown" viewBox="0 0 24 24"><path d="m3 18 2-11 5 5 2-7 2 7 5-5 2 11H3Z"/></symbol>
+<symbol id="dumb" viewBox="0 0 24 24"><path d="M6 7v10M3 9v6M18 7v10M21 9v6M6 12h12"/></symbol>
+<symbol id="award" viewBox="0 0 24 24"><circle cx="12" cy="9" r="6"/><path d="m8.5 14-1.5 8 5-3 5 3-1.5-8"/></symbol>
+<symbol id="spark" viewBox="0 0 24 24"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2 2M16 16l2 2M18 6l-2 2M8 16l-2 2"/></symbol>
+<symbol id="save" viewBox="0 0 24 24"><path d="M5 3h11l3 3v15H5z"/><path d="M8 3v5h7V3M8 21v-7h8v7"/></symbol>
+<symbol id="trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></symbol>
+<symbol id="plusi" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+<symbol id="star" viewBox="0 0 24 24"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9L12 3Z"/></symbol>
+<symbol id="flame" viewBox="0 0 24 24"><path d="M12 3c1 4 5 6 5 11a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-4-1-6 1-10Z"/></symbol>
+<symbol id="user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></symbol>
+<symbol id="users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2 20c1-4 3-6 7-6s6 2 7 6M16 4.5a3.5 3.5 0 0 1 0 7M18 14c2 1 3 3 4 6"/></symbol>
+<symbol id="info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></symbol>
+<symbol id="db" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></symbol>
+<symbol id="done" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></symbol>
+<symbol id="brain" viewBox="0 0 24 24"><path d="M9 4a3 3 0 0 0-3 3 3 3 0 0 0-2 5 3 3 0 0 0 2 5 3 3 0 0 0 6 1V5a2 2 0 0 0-3-1ZM15 4a3 3 0 0 1 3 3 3 3 0 0 1 2 5 3 3 0 0 1-2 5 3 3 0 0 1-6 1"/></symbol>
+<symbol id="school" viewBox="0 0 24 24"><path d="m2 9 10-5 10 5-10 5L2 9Z"/><path d="M6 11v5c3 2 9 2 12 0v-5M22 9v6"/></symbol>
+<symbol id="up" viewBox="0 0 24 24"><path d="M7 11v9H4v-9zM7 11l4-8a2 2 0 0 1 3 2l-1 5h6a2 2 0 0 1 2 2l-2 7a2 2 0 0 1-2 1H7"/></symbol>
+<symbol id="down" viewBox="0 0 24 24"><path d="M7 13V4H4v9zM7 13l4 8a2 2 0 0 0 3-2l-1-5h6a2 2 0 0 0 2-2l-2-7a2 2 0 0 0-2-1H7"/></symbol>
+</defs></svg>
+<main>
+<div id="welcome">
+ <svg class="logo big" viewBox="0 0 226 52" role="img" aria-label="Fairway Buddy"><use href="#logo"/></svg>
+ <div class="card"><h2>Set up your profile</h2><p class="note">Everything stays on this device.</p>
+  <input id="wn" placeholder="Your name" maxlength="20" autocomplete="off">
+  <p class="note" style="margin:14px 0 2px">Which hand do you swing with?</p>
+  <div class="seg" id="hands"><button data-h="right">Right-handed</button><button data-h="left">Left-handed</button></div>
+  <p class="note">This helps your AI coach give advice that fits your swing.</p>
+  <button class="btn gold full" id="wb">Get started</button><p class="note err" id="wmsg"></p></div>
+</div>
+
+<section class="tab on" id="t-profile">
+ <div class="banner"><div class="bi"><svg class="logo" viewBox="0 0 226 52" role="img" aria-label="Fairway Buddy"><use href="#logo"/></svg></div></div>
+ <div class="who"><span class="av" id="wav"></span><div><b id="wname"></b><span class="note" id="whand"></span></div></div>
+
+ <div class="gh">Profile</div>
+ <div class="card">
+  <label class="note" for="sn">Name</label><input id="sn" maxlength="20" autocomplete="off">
+  <p class="note" style="margin:14px 0 2px">Handedness</p>
+  <div class="seg" id="sh"><button data-h="right">Right-handed</button><button data-h="left">Left-handed</button></div>
+  <p class="note">Your AI coach uses this so left and right advice fits your swing, like which arm leads.</p>
+  <button class="btn sm" id="ssn" hidden>Save changes</button></div>
+
+  <div class="gh">Storage</div>
+ <div class="card">
+  <div class="meter lg"><i id="sbar" style="width:0"></i></div>
+  <div id="sline" style="font-weight:600">0.0 MB / ...</div>
+  <p class="note" id="scount" style="margin:2px 0 0"></p></div>
+
+ <div class="gh">Coach memory</div>
+ <div class="card"><h2><svg class="i"><use href="#brain"/></svg>What your coach has learned</h2>
+  <p class="note" style="margin:0 0 4px">Your AI coach keeps short notes about your swing so its feedback gets more accurate over time. Tell it when a tip was off (on any swing check) and it rewrites these notes. They stay on this device and are sent to Claude with each check.</p>
+  <div id="notes"></div>
+  <p class="note" id="ncal" style="margin:8px 0"></p>
+  <button class="btn alt sm" id="nclr" hidden><span>Clear coach memory</span></button></div>
+
+ <div class="gh">Friends</div>
+ <div class="card"><h2><svg class="i"><use href="#users"/></svg>Coming soon</h2>
+  <p style="margin:0 0 8px">Add teammates, compare streaks and cheer each other on.</p>
+  <p class="note">Friends needs sign-in and a server, so for now everything stays private on this device.</p>
+  <button class="btn alt sm" disabled>Add a friend</button></div>
+
+ <div class="gh">About</div>
+ <div class="card">
+  <p style="margin:0 0 6px">Fairway Buddy gives junior golfers simple swing feedback and at-home drills, wherever they practice.</p>
+  <p class="note" style="margin:0 0 8px">For swing feedback, Claude, an AI made by Anthropic, looks at frames from your video and uses Google's MediaPipe body tracking on your device to measure your swing. Treat tips as friendly guidance, not a replacement for a real coach. Version 1.0.</p>
+  <details><summary>Acknowledgements</summary>
+   <p>Swing feedback, drills and coach notes are generated by Claude, an AI model made by Anthropic.</p>
+   <p>Body-point tracking uses the MediaPipe Pose Landmarker by Google (Apache License 2.0), through the @mediapipe/tasks-vision package. It runs on your device. Claude asks it for measurements while it reviews your swing.</p>
+   <p>The logo and icons were drawn for this app.</p>
+   <p>Dedicated to every young golfer practicing in a backyard, a living room or a driveway.</p></details>
+  <details><summary>Terms and Conditions</summary>
+   <ol>
+    <li><b>Using the app.</b> Fairway Buddy is for personal, non-commercial use. Players under 13 need a parent or guardian's permission.</li>
+    <li><b>Safety first.</b> Golf swings and drills involve movement. Practice in a clear space, look around you, and never swing a real club indoors or toward people or pets. Younger players should have an adult nearby. You are responsible for how and where you practice.</li>
+    <li><b>AI guidance.</b> Feedback and drills are made by AI, can be wrong, and are not a substitute for a qualified coach or medical advice. Stop if anything hurts.</li>
+    <li><b>Your videos and data.</b> Saved swings, progress and coach notes stay on your device. When you ask for feedback, a few frames, body-point measurements and your coach notes are sent to Claude for analysis, and text you type in Drills is sent to build your drills. Please do not include personal information.</li>
+    <li><b>Deleting data.</b> You can delete your saved swings, coach notes or your whole profile, including progress, at any time in Profile. Clearing browser data also removes them.</li>
+    <li><b>No warranty.</b> The app is provided as is. To the extent allowed by law, the makers are not liable for injury or loss from using it.</li>
+    <li><b>Changes.</b> These terms may change. Continuing to use the app means you accept the updated terms.</li>
+   </ol></details>
+ </div>
+
+ <div class="gh">Data</div>
+ <div class="card"><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn alt sm" id="dsw"><span>Delete all swings</span></button><button class="btn alt sm" id="del"><span>Delete my profile</span></button></div></div>
+</section>
+
+<section class="tab" id="t-lib">
+ <h1 class="lt">My Swings</h1>
+ <div class="card"><p class="note" style="margin-top:0">Saved on this device only. Tap a swing to watch it and get new feedback. Use the + button to add one.</p><div id="list"></div></div>
+</section>
+
+<section class="tab" id="t-drills">
+ <h1 class="lt">Drills</h1>
+ <div class="card">
+  <p class="note" style="margin-top:0">Tell me where you are and what you have. Type anything, like <i>"I'm in my backyard with a broom, two pillows and a tennis ball."</i></p>
+  <textarea id="have" placeholder="Where are you practicing, and what do you have?"></textarea>
+  <p style="margin:12px 0 0"><button class="btn gold full" id="mk"><svg class="i"><use href="#spark"/></svg>Build my drills</button></p>
+  <p class="note" id="dstat"></p>
+ </div>
+ <div class="card" id="dcard" hidden>
+  <h2>Built for you</h2>
+  <div id="drills"></div>
+ </div>
+ <div class="gh">Drills</div>
+ <div class="card" id="pre"><p class="note" style="margin:0 0 4px">Pick by what you want to train. Tap a group to open it. Finish one and a new one takes its place.</p></div>
+ <div class="gh">Completed</div>
+ <div class="card"><p class="note" id="dnote" style="margin-top:0"></p><div id="dlist"></div><button class="btn alt sm" id="dmore" hidden style="margin-top:4px">Show more</button></div>
+</section>
+
+<section class="tab" id="t-prog">
+ <h1 class="lt" id="pname">Progress</h1>
+ <div class="card"><div class="stat"><div><b id="s1">0</b>drills done</div><div><b id="s3">0</b>day streak</div><div><b id="s2">1</b>level</div></div><div id="lvbar" style="margin-top:14px"></div></div>
+ <div class="card"><h2><svg class="i"><use href="#flame"/></svg>Next up</h2><div class="badges" id="next"></div></div>
+ <div class="card"><h2><svg class="i"><use href="#target"/></svg>Achievements</h2><div class="badges" id="ach"></div></div>
+ <div class="card"><div class="row"><h2><svg class="i"><use href="#award"/></svg>Badges</h2><span class="note" id="bc"></span></div><div class="badges" id="badges"></div></div>
+</section>
+</main>
+
+<div class="scr" id="scr" hidden>
+ <div class="bar"><span style="width:60px"></span><b>Swing check</b><button id="sdone">Done</button></div>
+ <div class="card">
+  <video id="player" controls playsinline hidden></video>
+  <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+   <button class="btn gold" id="go" disabled><svg class="i"><use href="#spark"/></svg><span id="goT">Get AI feedback</span></button>
+   <button class="btn alt" id="sv" disabled><svg class="i"><use href="#save"/></svg><span id="svT">Save to My Swings</span></button>
+  </div>
+  <p class="note" id="status"></p>
+  <p class="note">Tip: film from behind or face-on, a few steps back. Hold your phone upright or sideways, whichever keeps your whole body and club in view.</p>
+ </div>
+ <div class="card" id="res" hidden>
+  <h2><svg class="i"><use href="#target"/></svg>Your swing feedback</h2>
+  <p id="sum"></p><div id="metrics"></div><div class="tip" id="drill"></div>
+  <button class="btn alt full" id="topr"><svg class="i"><use href="#clip"/></svg>Get drills for this</button>
+  <p class="note" id="conf" style="margin-top:12px"></p>
+  <details class="log" id="logd" hidden><summary class="note" id="logs"></summary><ul class="note" id="logl" style="padding-left:20px;margin:6px 0 0"></ul></details>
+ </div>
+ <div class="card" id="vcard" hidden>
+  <h2><svg class="i"><use href="#school"/></svg>Was this right?</h2>
+  <div id="vbody"></div>
+ </div>
+</div>
+
+<div class="scrim" id="as" hidden><div class="sheet">
+ <div class="grp">
+  <label id="aRec" class="act" for="cam"><svg class="i"><use href="#camera"/></svg>Record a swing</label>
+  <label id="aPick" class="act" for="vid"><svg class="i"><use href="#film"/></svg>Choose a video</label></div></div></div>
+
+<div class="toast" id="toast"></div>
+<nav>
+ <div class="ng">
+  <button class="on" data-t="profile"><svg class="i"><use href="#user"/></svg>Profile</button>
+  <button data-t="lib"><svg class="i"><use href="#film"/></svg>My Swings</button>
+ </div>
+ <div class="gap"></div>
+ <div class="ng">
+  <button data-t="drills"><svg class="i"><use href="#clip"/></svg>Drills</button>
+  <button data-t="prog"><svg class="i"><use href="#trophy"/></svg>Progress</button>
+ </div>
+</nav>
+<button class="plus" id="plus" aria-label="Add a swing"><svg class="i"><use href="#plusi"/></svg></button>
+<input type="file" id="cam" class="vh" accept="video/*" capture="environment">
+<input type="file" id="vid" class="vh" accept="video/*">
+
+<script>
+var $=function(i){return document.getElementById(i)};
+function ic(n){return '<svg class="i"><use href="#'+n+'"/></svg>'}
+function esc(s){var d=document.createElement("div");d.textContent=String(s==null?"":s);return d.innerHTML}
+function newS(){return {done:0,xp:0,diff:1,sd:"",sn:0,level:1,streak:0,best:0,last:"",checks:0,days:0,names:{},recent:[],seen:[],completed:[],act:{}}}
+var DB={me:null};
+try{var r=localStorage.getItem("fb4");if(r)DB=JSON.parse(r);else{var o=JSON.parse(localStorage.getItem("fb3")||"null");if(o&&o.profiles&&o.profiles[0]){var q=o.profiles[0];DB.me={name:q.name,hand:"",S:q.S}}}}catch(e){}
+if(DB.me){var o0=DB.me.S||{},m0=Object.assign(newS(),o0);if(o0.xp===undefined){m0.xp=(o0.done||0)*10+(o0.checks||0)*15;m0.diff=o0.level||1}DB.me.S=m0}
+function save(){try{localStorage.setItem("fb4",JSON.stringify(DB))}catch(e){}}
+var S=null;
+function toast(h){var t=$("toast");t.innerHTML=h;t.style.display="block";setTimeout(function(){t.style.display="none"},3500)}
+function tab(t){document.querySelectorAll("nav button").forEach(function(x){x.classList.toggle("on",x.dataset.t===t)});
+ document.querySelectorAll(".tab").forEach(function(e){e.classList.toggle("on",e.id==="t-"+t)});
+ if(t==="prog")renderProg();if(t==="lib")renderLib();if(t==="profile")renderSettings();if(t==="drills")renderDone();sheet(false);window.scrollTo(0,0)}
+document.querySelectorAll("nav button[data-t]").forEach(function(b){b.onclick=function(){tab(b.dataset.t)}});
+
+/* ---- local video storage (IndexedDB) ---- */
+function idb(){return new Promise(function(res,rej){var q=indexedDB.open("fairway",1);q.onupgradeneeded=function(){q.result.createObjectStore("swings",{keyPath:"id"})};q.onsuccess=function(){res(q.result)};q.onerror=function(){rej(q.error)}})}
+function tx(m,fn){return idb().then(function(db){return new Promise(function(res,rej){var t=db.transaction("swings",m),q=fn(t.objectStore("swings"));t.oncomplete=function(){res(q&&q.result)};t.onerror=function(){rej(t.error)}})})}
+function putSw(x){return tx("readwrite",function(s){return s.put(x)})}
+function allSw(){return tx("readonly",function(s){return s.getAll()})}
+function delSw(id){return tx("readwrite",function(s){return s.delete(id)})}
+function wipeSw(){return allSw().then(function(a){return Promise.all(a.map(function(x){return delSw(x.id)}))})}
+
+/* ---- profile ---- */
+var wh="";
+function segSet(id,h){document.querySelectorAll("#"+id+" button").forEach(function(x){x.classList.toggle("on",x.dataset.h===h)})}
+function renderProfiles(){var p=DB.me,need=!p||!p.hand;document.body.classList.toggle("nop",need);S=p?p.S:null;
+ if(need){if(p&&!$("wn").value)$("wn").value=p.name;return}
+ renderProg();resetSwing();$("dcard").hidden=true;renderSettings();renderPre();renderDone()}
+document.querySelectorAll("#hands button").forEach(function(b){b.onclick=function(){wh=b.dataset.h;segSet("hands",wh)}});
+$("wb").onclick=function(){var n=$("wn").value.trim();if(!n||!wh){$("wmsg").textContent="Please enter your name and pick left or right-handed.";return}
+ if(!DB.me)DB.me={name:n,hand:wh,S:newS()};else{DB.me.name=n;DB.me.hand=wh}
+ save();$("wmsg").textContent="";renderProfiles();tab("profile")};
+function fmt(b){if(b>=1073741824){var g=b/1073741824;return g.toFixed(g>=10?0:1)+" GB"}return (b/1048576).toFixed(1)+" MB"}
+function renderSettings(){var p=DB.me;if(!p)return;$("sn").value=p.name;ph=p.hand;segSet("sh",p.hand);$("ssn").hidden=true;
+ $("wav").textContent=(p.name[0]||"?").toUpperCase();$("wname").textContent=p.name;$("whand").textContent=(p.hand==="left"?"Left":"Right")+"-handed golfer · Level "+lvInfo().n;
+renderStorage();renderNotes()}
+function renderNotes(){if(!DB.me)return;var a=notes(),L=$("notes");
+ L.innerHTML=a.length?"":'<p class="note" style="margin:6px 0">No notes yet. They\'ll appear after your first few swing checks.</p>';
+ a.slice().reverse().forEach(function(n){var el=document.createElement("div");el.className="nt";
+  el.innerHTML='<div class="b">'+esc(n.text)+'<div class="note">'+new Date(n.date).toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"})+'</div></div><button class="ib" aria-label="Forget this note">'+ic("trash")+'</button>';
+  el.querySelector("button").onclick=function(){delNote(n.id);renderNotes()};L.appendChild(el)});
+ $("nclr").hidden=!a.length;
+ allSw().then(function(s){var k=s.filter(function(x){return x.verdict}).length;$("ncal").textContent=k+" swing"+(k==1?"":"s")+" rated by you. Every rating teaches your coach."}).catch(function(){$("ncal").textContent=""})}
+twoTap("nclr","Clear coach memory",function(){DB.me.notes=[];save();renderNotes()});
+function renderStorage(){var a1=allSw().catch(function(){return null}),a2=(navigator.storage&&navigator.storage.estimate)?navigator.storage.estimate().catch(function(){return null}):Promise.resolve(null);
+ Promise.all([a1,a2]).then(function(r){var a=r[0]||[],e=r[1],vb=a.reduce(function(t,x){return t+(x.blob?x.blob.size:0)},0),used=(e&&e.usage!=null)?e.usage:vb,quota=(e&&e.quota)?e.quota:0;
+  $("sbar").style.width=quota?Math.max(used>0?2:0,Math.min(100,used/quota*100))+"%":"0%";
+  $("sline").textContent=fmt(used)+" / "+(quota?fmt(quota):"limit unknown");
+  $("scount").textContent=r[0]===null?"Saved swings aren't available in this browser.":a.length+" saved swing"+(a.length==1?"":"s")+" ("+fmt(vb)+")"})}
+var ph="";
+function chk(){var p=DB.me,n=$("sn").value.trim();$("ssn").hidden=!(n&&(n!==p.name||ph!==p.hand))}
+$("sn").oninput=chk;
+document.querySelectorAll("#sh button").forEach(function(b){b.onclick=function(){ph=b.dataset.h;segSet("sh",ph);chk()}});
+$("ssn").onclick=function(){var n=$("sn").value.trim();if(!n)return;DB.me.name=n;DB.me.hand=ph;save();renderSettings();toast(ic("check")+" Changes saved")};
+function twoTap(id,txt,fn){var b=$(id);b.onclick=function(){var sp=b.querySelector("span");if(!b.dataset.a){b.dataset.a=1;sp.textContent="Tap again to confirm";setTimeout(function(){b.dataset.a="";sp.textContent=txt},4000);return}b.dataset.a="";sp.textContent=txt;fn()}}
+twoTap("dsw","Delete all swings",function(){wipeSw().then(renderStorage).catch(function(){})});
+twoTap("del","Delete my profile",function(){wipeSw().catch(function(){}).then(function(){DB={me:null};save();wh="";$("wn").value="";segSet("hands","");renderProfiles();window.scrollTo(0,0)})});
+
+/* ---- add a swing (+) ---- */
+function sheet(v){$("as").hidden=!v;$("plus").classList.toggle("open",!!v);if(v)$("as").firstElementChild.style.bottom=(document.querySelector("nav").offsetHeight+12)+"px"}
+var lastT=0;function togglePlus(){var n=Date.now();if(n-lastT<400)return;lastT=n;sheet($("as").hidden)}
+$("plus").addEventListener("pointerup",togglePlus);$("plus").addEventListener("click",togglePlus);
+$("as").onclick=function(e){if(!e.target.closest("#aRec,#aPick"))sheet(false)};
+["aRec","aPick"].forEach(function(id){$(id).addEventListener("click",function(){setTimeout(function(){sheet(false)},250)})});
+$("cam").onchange=$("vid").onchange=function(e){var f=e.target.files[0];e.target.value="";if(f)openSwing(f,null)};
+
+/* ---- swing check ---- */
+var cur=null;
+function resetSwing(){cur=null;$("player").hidden=true;$("player").removeAttribute("src");$("res").hidden=true;$("vcard").hidden=true;$("go").disabled=true;$("sv").disabled=true;$("goT").textContent="Get AI feedback";$("svT").textContent="Save to My Swings";$("status").textContent=""}
+function openSwing(blob,rec){resetSwing();cur={blob:blob,rec:rec};$("player").src=URL.createObjectURL(blob);$("player").hidden=false;$("go").disabled=false;
+ if(rec){$("sv").disabled=true;$("svT").textContent="Saved";$("goT").textContent=rec.fb?"Analyze again":"Get AI feedback";if(rec.fb)renderFb(rec.fb)}
+ else{$("sv").disabled=false;$("status").textContent="Ready. Tap Get AI feedback, or save it first."}
+ $("scr").hidden=false;$("scr").scrollTop=0}
+$("sdone").onclick=function(){$("scr").hidden=true;$("player").pause()};
+/* frames: n evenly spaced stills between fractions from..to of the clip. Each item is a JPEG blob; out.times holds their times in ms. */
+function frames(f,n,from,to){from=from||0;to=to==null?1:to;return new Promise(function(res,rej){
+ var url=URL.createObjectURL(f),v=document.createElement("video"),done=false,tm;
+ v.muted=true;v.defaultMuted=true;v.playsInline=true;v.setAttribute("playsinline","");v.setAttribute("webkit-playsinline","");v.preload="auto";v.className="vh";document.body.appendChild(v);
+ function end(err,out){if(done)return;done=true;clearTimeout(tm);v.remove();URL.revokeObjectURL(url);if(err)rej(err);else res(out)}
+ tm=setTimeout(function(){end(new Error("the video took too long to load"))},25000);
+ v.onerror=function(){end(new Error("this device couldn't decode that video"))};
+ function grab(){var d=v.duration;
+  if(d===Infinity){v.ontimeupdate=function(){v.ontimeupdate=null;v.currentTime=0;grab()};v.currentTime=1e101;return}
+  if(!d||!isFinite(d)||!v.videoWidth)return end(new Error("couldn't read the video length"));
+  var out=[],i=0,L=560,vw=v.videoWidth,vh=v.videoHeight,pt=vh>vw,w=pt?Math.round(L*vw/vh):L,h=pt?L:Math.round(L*vh/vw),c=document.createElement("canvas");c.width=w;c.height=h;out.portrait=pt;out.times=[];out.duration=d;var x=c.getContext("2d");
+  function snap(t){try{x.drawImage(v,0,0,w,h)}catch(e){return end(e)}
+   c.toBlob(function(b){if(!b)return end(new Error("couldn't capture a frame"));out.push(b);out.times.push(Math.round(t*1000));i++;next()},"image/jpeg",.7)}
+  function next(){if(i>=n)return end(null,out);var t=Math.min(d-.05,d*(from+(to-from)*(i+.5)/n)),fired=false,sd=setTimeout(function(){if(!fired){fired=true;v.onseeked=null;snap(t)}},3000);
+   v.onseeked=function(){if(fired)return;fired=true;clearTimeout(sd);v.onseeked=null;snap(t)};v.currentTime=t}
+  next()}
+ v.onloadeddata=function(){var p;try{p=v.play()}catch(e){}Promise.resolve(p).catch(function(){}).then(function(){v.pause();grab()})};
+ v.src=url;v.load()})}
+function store(thumb,fb,portrait,extra){var rec=cur.rec||{id:"s"+Date.now(),pid:"me",date:Date.now(),blob:cur.blob,thumb:thumb,portrait:!!portrait};
+ if(fb){rec.fb=fb;delete rec.verdict}if(extra)Object.assign(rec,extra);cur.rec=rec;return putSw(rec).then(function(){$("sv").disabled=true;$("svT").textContent="Saved"})}
+$("sv").onclick=function(){var st=$("status");st.className="note";
+ frames(cur.blob,1).then(function(f){return store(f[0],null,f.portrait)}).then(function(){st.textContent="Saved to My Swings."}).catch(function(){st.className="note err";st.textContent="Couldn't save here. Your browser may block local storage."})};
+function renderFb(j){$("sum").textContent=j.summary||"";
+ $("metrics").innerHTML=(j.checks||[]).map(function(c){var v=Math.max(1,Math.min(5,+c.rating||3));
+  return '<div><div class="row"><b>'+esc(c.name)+'</b><span class="note">'+v+' / 5</span></div><div class="meter"><i style="width:'+v*20+'%"></i></div><div class="tip">'+esc(c.tip)+'</div></div>'}).join("");
+ $("drill").innerHTML='<b>Try this:</b> '+esc(j.drill);
+ $("conf").textContent="AI confidence: "+(j.confidence||"medium")+". "+(j.tracked===true?"Your coach used MediaPipe body tracking to measure this swing. ":j.tracked===false?"Body tracking couldn't find you in enough frames, so the coach used the video frames only. ":"")+"Treat this as friendly guidance, not a measurement. Frames are sent to Claude for analysis.";
+ var log=j.toolLog||[];$("logd").hidden=!log.length;$("logs").textContent="How your coach checked ("+log.length+" steps)";$("logl").innerHTML=log.map(function(s){return "<li>"+esc(s)+"</li>"}).join("");
+ $("res").hidden=false;renderVerdict()}
+
+/* ---- the learning loop: the golfer says whether the feedback was right ---- */
+function renderVerdict(){var r=cur&&cur.rec,b=$("vbody");$("vcard").hidden=!(r&&r.fb);if(!r||!r.fb)return;var v=r.verdict;
+ if(v){b.innerHTML='<p style="margin:0">'+(v.agrees?"You said this feedback was spot on.":"You said it was not quite right"+(v.correction?': "'+esc(v.correction)+'"':"."))+'</p><p class="note">Your coach uses this to calibrate future checks.</p>';return}
+ b.innerHTML='<p class="note" style="margin:0 0 10px">Tell your coach how it did. If you have a real coach, ask them! Your AI coach learns from every answer.</p><div class="two"><button class="btn alt sm" id="vy">'+ic("up")+'Spot on</button><button class="btn alt sm" id="vn">'+ic("down")+'Not quite</button></div><div id="vfix" hidden><p style="margin:12px 0 0"><textarea id="vtxt" maxlength="300" placeholder="What was off? Like &quot;my coach says my posture is fine&quot; or &quot;my head didn\'t move&quot;" style="min-height:70px"></textarea></p><button class="btn gold full" id="vgo" style="margin-top:10px">'+ic("school")+'Teach my coach</button></div>';
+ $("vy").onclick=function(){verdict(true,"")};$("vn").onclick=function(){$("vfix").hidden=false;$("vtxt").focus()};$("vgo").onclick=function(){verdict(false,$("vtxt").value.trim())}}
+async function verdict(agrees,correction){var r=cur.rec;r.verdict={agrees:agrees,correction:correction,date:Date.now()};
+ try{await putSw(r)}catch(e){}renderVerdict();
+ if(agrees){toast(ic("check")+" Thanks! Your coach will remember this was right.");return}
+ toast(ic("brain")+" Thanks! Your coach is learning from this...");
+ try{var n=await reflect(r);toast(ic("check")+(n?" Your coach updated its notes about you.":" Got it. Your coach will keep that in mind."))}catch(e){}}
+
+/* ---- MediaPipe ---- */
+var poseP=null,PV="0.10.14";
+function loadPose(){if(poseP)return poseP;
+ poseP=(async function(){var m=await import("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@"+PV+"/vision_bundle.mjs"),
+  v=await m.FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@"+PV+"/wasm");
+  return await m.PoseLandmarker.createFromOptions(v,{baseOptions:{modelAssetPath:"https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_full/float16/1/pose_landmarker_full.task"},runningMode:"IMAGE",numPoses:1})})();
+ poseP.catch(function(){poseP=null});return poseP}
+var LMN=["nose","left_eye_inner","left_eye","left_eye_outer","right_eye_inner","right_eye","right_eye_outer","left_ear","right_ear","mouth_left","mouth_right","left_shoulder","right_shoulder","left_elbow","right_elbow","left_wrist","right_wrist","left_pinky","right_pinky","left_index","right_index","left_thumb","right_thumb","left_hip","right_hip","left_knee","right_knee","left_ankle","right_ankle","left_heel","right_heel","left_foot_index","right_foot_index"];
+var KEYLM=[0,11,12,13,14,15,16,23,24,25,26,27,28],BONES=[[11,12],[11,13],[13,15],[12,14],[14,16],[11,23],[12,24],[23,24],[23,25],[25,27],[24,26],[26,28],[27,31],[28,32],[0,11],[0,12]];
+/* Fills in .lm (33 points, x scaled by aspect ratio so distances match on both axes) for frames that don't have it. */
+async function detect(frs){var pl=await Promise.race([loadPose(),new Promise(function(_,r){setTimeout(function(){r(new Error("timeout"))},20000)})]);
+ for(var i=0;i<frs.length;i++){var f=frs[i];if(f.lm!==undefined)continue;var bm=await createImageBitmap(f.blob),ar=bm.width/bm.height,r=pl.detect(bm),lm=r&&r.landmarks&&r.landmarks[0];
+  f.lm=lm?lm.map(function(q){return {x:q.x*ar,y:q.y,v:q.visibility==null?1:q.visibility}}):null;f.w=bm.width;f.h=bm.height;if(bm.close)bm.close()}}
+/* Copy of the frame with the tracked skeleton drawn in gold, so Claude (and the golfer) can see what MediaPipe found. */
+async function skeleton(f){var bm=await createImageBitmap(f.blob),c=document.createElement("canvas");c.width=bm.width;c.height=bm.height;var x=c.getContext("2d");x.drawImage(bm,0,0);
+ var p=f.lm,ar=bm.width/bm.height,s=bm.width/160;if(bm.close)bm.close();
+ if(p){function px(l){return [l.x/ar*c.width,l.y*c.height]}
+  x.strokeStyle="#e2bb4a";x.lineWidth=s*1.4;x.lineCap="round";
+  BONES.forEach(function(b){if(p[b[0]].v<.3||p[b[1]].v<.3)return;var a=px(p[b[0]]),d=px(p[b[1]]);x.beginPath();x.moveTo(a[0],a[1]);x.lineTo(d[0],d[1]);x.stroke()});
+  x.fillStyle="#fff";KEYLM.forEach(function(i){if(p[i].v<.3)return;var a=px(p[i]);x.beginPath();x.arc(a[0],a[1],s*1.8,0,7);x.fill()})}
+ return await new Promise(function(r){c.toBlob(r,"image/jpeg",.72)})}
+function b64(blob){return new Promise(function(res,rej){var r=new FileReader();r.onload=function(){res(String(r.result).split(",")[1])};r.onerror=rej;r.readAsDataURL(blob)})}
+async function imgBlock(blob){return {type:"image",source:{type:"base64",media_type:"image/jpeg",data:await b64(blob)}}}
+function mid(l,a,b){return {x:(l[a].x+l[b].x)/2,y:(l[a].y+l[b].y)/2}}
+function dist(p,q){return Math.hypot(p.x-q.x,p.y-q.y)}
+function angD(a,b,c){var v1x=a.x-b.x,v1y=a.y-b.y,v2x=c.x-b.x,v2y=c.y-b.y,den=Math.hypot(v1x,v1y)*Math.hypot(v2x,v2y);if(!den)return 0;return Math.acos(Math.max(-1,Math.min(1,(v1x*v2x+v1y*v2y)/den)))*180/Math.PI}
+function r1(v){return Math.round(v*10)/10}function r3(v){return Math.round(v*1000)/1000}
+/* Summary numbers for one swing (same as the Android app). Lengths are a percent of the golfer's height at address. */
+function swingMetrics(all,hand){var frs=all.slice().sort(function(a,b){return a.t-b.t}),ok=frs.filter(function(f){return f.lm});if(ok.length<4)return null;
+ var P=ok.map(function(f){return f.lm}),f=P[0],l=P[P.length-1],pr=P[P.length-2],h0=dist(f[0],mid(f,27,28));if(!(h0>.05))h0=.5;
+ var ld=hand==="left"?[12,14,16]:[11,13,15],hm=0;P.forEach(function(q){hm=Math.max(hm,dist(q[0],f[0]))});
+ var sh=mid(f,11,12),hp=mid(f,23,24),ti=0;P.forEach(function(q,i){if(mid(q,15,16).y<mid(P[ti],15,16).y)ti=i});
+ var top=P[ti],sw0=dist(f[11],f[12])||1,hw0=dist(f[23],f[24])||1;
+ var out={frames_with_pose:ok.length,of_frames:frs.length,head_movement_pct_of_height:r1(hm/h0*100),
+  address_knee_flex_deg:r1((angD(f[23],f[25],f[27])+angD(f[24],f[26],f[28]))/2),address_hip_hinge_deg:r1((angD(f[11],f[23],f[25])+angD(f[12],f[24],f[26]))/2),
+  address_spine_tilt_from_vertical_deg:r1(Math.abs(Math.atan2(sh.x-hp.x,hp.y-sh.y))*180/Math.PI),top_frame_index:all.indexOf(ok[ti]),
+  top_lead_arm_angle_deg:r1(angD(top[ld[0]],top[ld[1]],top[ld[2]])),top_shoulder_width_ratio:r1(dist(top[11],top[12])/sw0),top_hip_width_ratio:r1(dist(top[23],top[24])/hw0),
+  top_head_drop_pct_of_height:r1((top[0].y-f[0].y)/h0*100),finish_hips_offset_from_feet_pct:r1(Math.abs(mid(l,23,24).x-mid(l,27,28).x)/h0*100),
+  finish_last_frame_hip_motion_pct:r1(dist(mid(l,23,24),mid(pr,23,24))/h0*100)};
+ var ay=mid(f,15,16).y,si=-1,ii=-1,i;for(i=0;i<P.length;i++)if(dist(mid(P[i],15,16),mid(f,15,16))/h0>.05){si=i;break}
+ for(i=ti+1;i<P.length;i++)if(mid(P[i],15,16).y>=ay-.03){ii=i;break}
+ if(si>=0&&ii>=0&&si<ti){var bk=ok[ti].t-ok[si].t,dn=ok[ii].t-ok[ti].t;if(bk>0&&dn>0)out.rough_tempo_back_to_down_ratio=r1(bk/dn)}
+ return out}
+
+/* ---- Claude ---- */
+function handTxt(){var h=DB.me.hand==="left"?"left":"right";return "The golfer is "+h+"-handed, so their lead side is their "+(h==="left"?"right":"left")+" side and their setup is "+(h==="left"?"the mirror image of a right-hander's":"standard")+". Make every left or right comment correct for a "+h+"-handed golfer. MediaPipe landmark names are from the golfer's own point of view (left_wrist is the golfer's left wrist). "}
+function cerr(m,c){var e=new Error(m);e.code=c;return e}
+/* One turn through our server function, which adds the API key, prompts and tools. */
+async function api(task,messages){
+ for(var k=0;k<3;k++){var code="";try{code=localStorage.getItem("fbcode")||""}catch(e){}
+  var r;try{r=await fetch("/api/claude",{method:"POST",headers:{"content-type":"application/json","x-access-code":code},body:JSON.stringify({task:task,messages:messages})})}catch(e){throw cerr("couldn't reach the server","offline")}
+  if(r.status===401){var c=prompt("This Fairway Buddy site needs an access code for AI features. Enter it:");if(!c)throw cerr("an access code is needed","access");try{localStorage.setItem("fbcode",c.trim())}catch(e){}continue}
+  var j=await r.json().catch(function(){return {}});
+  if(r.status===429)throw cerr("too many requests","rate_limited");
+  if(!r.ok)throw cerr(j.error||("HTTP "+r.status),j.code||String(r.status));
+  return j}
+ throw cerr("wrong access code","access")}
+/* Tool-use loop: runs tools in the browser until Claude calls the finish tool, then returns that call's input. */
+async function runUntil(task,first,tools,finish,maxTurns){var msgs=[{role:"user",content:first}];
+ for(var turn=0;turn<maxTurns;turn++){var resp=await api(task,msgs);
+  if(resp.stop_reason==="refusal")throw cerr("The coach couldn't review this one. Try a different clip.","refusal");
+  if(resp.stop_reason==="max_tokens")throw cerr("The coach's answer was cut off.","max_tokens");
+  var calls=(resp.content||[]).filter(function(b){return b.type==="tool_use"}),fin=calls.filter(function(c){return c.name===finish})[0];
+  if(fin)return fin.input||{};
+  msgs.push({role:"assistant",content:resp.content});
+  var res=[],imgs=[];if(!calls.length)res.push({type:"text",text:"Please finish by calling "+finish+"."});
+  for(var i=0;i<calls.length;i++){var c=calls[i],out;
+   try{out=tools[c.name]?await tools[c.name](c.input||{}):{text:"Unknown tool "+c.name,err:true}}catch(e){out={text:"Tool failed: "+(e&&e.message||e),err:true}}
+   res.push({type:"tool_result",tool_use_id:c.id,content:out.text,is_error:!!out.err});
+   for(var k=0;k<(out.images||[]).length;k++){imgs.push({type:"text",text:out.images[k][0]});imgs.push(await imgBlock(out.images[k][1]))}}
+  // Tool results must lead the user turn; any frames the tools produced follow them.
+  msgs.push({role:"user",content:res.concat(imgs)})}
+ throw cerr("The coach took too many steps. Please try again.","steps")}
+function notes(){return DB.me.notes||(DB.me.notes=[])}
+function addNote(t,log){var n={id:"n"+Math.random().toString(36).slice(2,8),text:String(t).trim().slice(0,240),date:Date.now()};DB.me.notes=notes().concat(n).slice(-30);save();if(log)log.n++;return n}
+function delNote(id,log){var a=notes(),b=a.filter(function(n){return n.id!==id});if(b.length===a.length)return false;DB.me.notes=b;save();if(log)log.n++;return true}
+function notesTxt(){var a=notes();return a.length?a.map(function(n){return "- ["+n.id+"] "+n.text}).join("\n"):""}
+function lmIdx(n){var i=LMN.indexOf(String(n).trim().toLowerCase());if(i<0)throw new Error("unknown landmark '"+n+"'");return i}
+function swingTools(s,hist){var hand=DB.me.hand;return {
+ get_swing_metrics:async function(){s.log.push("Measured the whole swing");var m=swingMetrics(s.fr,hand);return {text:m?JSON.stringify(m):"Not enough frames with a detected body to compute metrics."}},
+ get_landmarks:async function(a){var i=a.frame,f=s.fr[i];if(!f)return {text:"No frame "+i+". Frames are 0-"+(s.fr.length-1)+".",err:true};if(!f.lm)return {text:"MediaPipe found no body in frame "+i+"."};
+  s.log.push("Read body points in frame "+i);var o={frame:i,time_ms:f.t};KEYLM.forEach(function(k){o[LMN[k]]=[r3(f.lm[k].x),r3(f.lm[k].y),r3(f.lm[k].v)]});return {text:JSON.stringify(o)}},
+ measure_angle:async function(a){var f=s.fr[a.frame];if(!f||!f.lm)return {text:"No tracked body in frame "+a.frame+".",err:true};var x=lmIdx(a.a),y=lmIdx(a.b),z=lmIdx(a.c),p=f.lm;
+  s.log.push("Measured the "+String(a.b).replace(/_/g," ")+" angle in frame "+a.frame);return {text:angD(p[x],p[y],p[z]).toFixed(1)+" degrees (visibility "+[p[x].v,p[y].v,p[z].v].map(function(v){return v.toFixed(2)}).join(", ")+")"}},
+ track_landmark:async function(a){var k=lmIdx(a.landmark),rows=s.fr.slice().sort(function(p,q){return p.t-q.t}).filter(function(f){return f.lm}).map(function(f){return [s.fr.indexOf(f),f.t,r3(f.lm[k].x),r3(f.lm[k].y),r3(f.lm[k].v)]});
+  s.log.push("Followed the "+String(a.landmark).replace(/_/g," ")+" through the swing");return {text:JSON.stringify({columns:["frame","time_ms","x","y","vis"],rows:rows})}},
+ analyze_more_frames:async function(a){var from=Math.max(0,Math.min(1,(+a.from_pct||0)/100)),to=Math.max(from,Math.min(1,(a.to_pct==null?100:+a.to_pct)/100)),n=Math.max(2,Math.min(6,+a.count||4));
+  if(s.fr.length+n>40)return {text:"Frame limit reached (40). Work with what you have.",err:true};
+  $("status").textContent="Your coach is taking a closer look...";
+  var raw=await frames(cur.blob,n,from,to),add=raw.map(function(b,i){return {blob:b,t:raw.times[i]}});try{await detect(add)}catch(e){add.forEach(function(f){f.lm=null})}
+  var start=s.fr.length;s.fr=s.fr.concat(add);s.log.push("Looked closer at "+Math.round(from*100)+"-"+Math.round(to*100)+"% of the clip with "+n+" more frames");
+  var imgs=[];for(var i=0;i<add.length;i++)imgs.push(["Frame "+(start+i)+" ("+add[i].t+" ms)",await skeleton(add[i])]);
+  return {text:"Added frames "+start+"-"+(start+add.length-1)+" at "+add.map(function(f){return f.t+" ms"}).join(", ")+". Body found in "+add.filter(function(f){return f.lm}).length+" of "+add.length+". Images follow.",images:imgs}},
+ get_player_history:async function(){var past=hist.filter(function(x){return x.fb}).sort(function(p,q){return q.date-p.date}).slice(0,8);
+  s.log.push("Compared with "+past.length+" earlier "+(past.length==1?"swing":"swings"));if(!past.length)return {text:"No earlier analyzed swings yet."};
+  var sums={},cnt={};past.forEach(function(x){var m=x.metrics||{};Object.keys(m).forEach(function(k){if(/^(frames_with_pose|of_frames|top_frame_index)$/.test(k))return;sums[k]=(sums[k]||0)+m[k];cnt[k]=(cnt[k]||0)+1})});
+  var avg={};Object.keys(sums).forEach(function(k){avg[k]=r1(sums[k]/cnt[k])});
+  return {text:JSON.stringify({swings:past.map(function(x){var rt={};(x.fb.checks||[]).forEach(function(c){rt[c.name]=c.rating});
+   return {date:new Date(x.date).toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"}),metrics:x.metrics||null,your_ratings:rt,your_summary:x.fb.summary,verdict:x.verdict?{agreed:x.verdict.agrees,correction:x.verdict.correction||null}:"not given"}}),personal_averages:avg})}},
+ save_coach_note:async function(a){var n=addNote(a.note);s.log.push("Saved a coach note");return {text:"Saved as "+n.id+"."}},
+ delete_coach_note:async function(a){var ok=delNote(a.id);if(ok)s.log.push("Removed an outdated coach note");return {text:ok?"Deleted.":"No note with that id.",err:!ok}},
+ submit_feedback:async function(){return {text:"Received."}}}}
+/* The learning step: Claude reflects on a disagreement and rewrites its own notes. Returns how many notes changed. */
+async function reflect(r){var fb=r.fb,log={n:0};
+ var msg=handTxt()+"\nYour feedback: "+fb.summary+"\n"+(fb.checks||[]).map(function(c){return "- "+c.name+": "+c.rating+"/5. "+c.tip}).join("\n")+
+  "\nMediaPipe metrics for that swing: "+(r.metrics?JSON.stringify(r.metrics):"not available")+
+  '\nVerdict: they did NOT agree. Their correction: "'+(r.verdict.correction||"(no details given)")+'"\n\n'+(notes().length?"Your current notes:\n"+notesTxt():"Your current notes: none.");
+ await runUntil("reflect",[{type:"text",text:msg}],{
+  save_coach_note:async function(a){return {text:"Saved as "+addNote(a.note,log).id+"."}},
+  delete_coach_note:async function(a){return {text:delNote(a.id,log)?"Deleted.":"No note with that id."}},
+  done:async function(){return {text:"ok"}}},"done",5);
+ renderNotes();return log.n}
+$("go").onclick=async function(){
+ var st=$("status");st.className="note";$("go").disabled=true;st.textContent="Reading your video...";var stage="video";
+ try{
+  var raw=await frames(cur.blob,10),s={fr:raw.map(function(b,i){return {blob:b,t:raw.times[i]}}),log:[]};
+  st.textContent="Tracking body points...";
+  try{await detect(s.fr)}catch(e){s.fr.forEach(function(f){f.lm=null})}
+  var tracked=s.fr.filter(function(f){return f.lm}).length>=4,hist=[];
+  try{hist=(await allSw()).filter(function(x){return !cur.rec||x.id!==cur.rec.id})}catch(e){}
+  st.textContent="Your AI coach is watching the swing...";stage="ai";
+  var first=[{type:"text",text:handTxt()},{type:"text",text:notes().length?"Coach notes you saved earlier:\n"+notesTxt():"Coach notes: none yet. This may be your first session with this golfer."}];
+  if(!tracked)first.push({type:"text",text:"Body tracking couldn't find the golfer in enough frames, so pose tools may return little. Rely on the images and lower your confidence."});
+  first.push({type:"text",text:"Here are 4 of the "+s.fr.length+" frames (indices 0-"+(s.fr.length-1)+"), in time order from setup to finish, with MediaPipe's skeleton drawn in gold where it found the body:"});
+  for(var i of [0,3,6,9]){first.push({type:"text",text:"Frame "+i+" ("+s.fr[i].t+" ms)"});first.push(await imgBlock(await skeleton(s.fr[i])))}
+  var out=await runUntil("swing",first,swingTools(s,hist),"submit_feedback",12);stage="parse";
+  var j={summary:String(out.summary||""),checks:(out.checks||[]).map(function(c){return {name:String(c.name||""),rating:Math.max(1,Math.min(5,+c.rating||3)),tip:String(c.tip||"")}}),
+   drill:String(out.drill||""),confidence:out.confidence||"medium",tracked:tracked,toolLog:s.log.slice()};
+  var met=swingMetrics(s.fr,DB.me.hand);
+  st.textContent="";S.checks++;var g=swingXp();save();
+  try{await store(raw[2],j,raw.portrait,{metrics:met});st.textContent="Feedback saved with this swing in My Swings."+g}catch(e){st.textContent=g}
+  renderFb(j);renderNotes();
+  $("res").scrollIntoView({behavior:"smooth"});checkBadges();
+ }catch(e){st.className="note err";var c=e&&e.code,m=(e&&e.message)?String(e.message):"";
+  st.textContent=c==="access"?"AI feedback needs this site's access code. Tap the button again to enter it.":c==="offline"?"Couldn't reach the Fairway Buddy server. Check your connection and try again.":c==="rate_limited"?"Too many requests right now. Please wait a minute and try again.":c==="refusal"||c==="steps"?m:stage==="video"?"This device couldn't read frames from that video ("+m+"). Try recording again or pick a different clip.":stage==="parse"?"The AI answered in a format I couldn't read. Please tap the button again.":"The AI step failed"+(c?" ("+c+")":"")+(m?": "+m.slice(0,120):"")+". Please try again."}
+ finally{$("go").disabled=false}};
+$("topr").onclick=function(){$("scr").hidden=true;$("player").pause();tab("drills")};
+
+/* ---- My Swings ---- */
+function renderLib(){var L=$("list");L.innerHTML='<p class="note">Loading...</p>';
+ allSw().then(function(a){a=a.sort(function(x,y){return y.date-x.date});
+  if(!a.length){L.innerHTML='<p class="note">No saved swings yet. Tap the + button to add one.</p>';return}
+  L.innerHTML="";a.forEach(function(x){var el=document.createElement("div");el.className="sw";
+   var avg=x.fb&&x.fb.checks&&x.fb.checks.length?(x.fb.checks.reduce(function(s,c){return s+(+c.rating||0)},0)/x.fb.checks.length).toFixed(1)+" / 5 average":"Not analyzed yet";
+   el.innerHTML='<img alt="Swing thumbnail"><div class="b"><b>'+new Date(x.date).toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"})+'</b><div class="note">'+avg+'</div><div style="margin-top:6px;display:flex;gap:6px"><button class="btn sm" data-a="o">'+ic("video")+'Open</button><button class="btn alt sm" data-a="d" aria-label="Delete swing">'+ic("trash")+'</button></div></div>';
+   if(x.thumb){var im=el.querySelector("img");im.src=URL.createObjectURL(x.thumb);if(x.portrait)im.classList.add("p")}
+   el.querySelector('[data-a="o"]').onclick=function(){openSwing(x.blob,x)};
+   el.querySelector('[data-a="d"]').onclick=function(){delSw(x.id).then(renderLib)};
+   L.appendChild(el)})}).catch(function(){L.innerHTML='<p class="note err">Saving videos isn\'t available in this browser.</p>'})}
+
+/* ---- drills ---- */
+var KW={"Pillow":["pillow","cushion"],"Rolled socks":["sock"],"Broom or stick":["broom","stick","club"],"Towel":["towel"],"Tape or string":["tape","string","rope"],"Paper cup":["cup"],"Small ball":["ball"],"Chair":["chair"],"Mirror":["mirror"]};
+var CATS=[{id:"bal",n:"Balance and finish",i:"shield",t:"Trains a steady, held finish."},{id:"head",n:"Head steadiness",i:"target",t:"Trains keeping your head calm through the swing."},
+ {id:"pos",n:"Posture and setup",i:"user",t:"Trains a strong, athletic stance at address."},{id:"path",n:"Swing path and contact",i:"zap",t:"Trains a smooth path and solid contact."},
+ {id:"tem",n:"Tempo and rhythm",i:"spark",t:"Trains a smooth, even swing speed."},{id:"short",n:"Putting and chipping",i:"flag",t:"Trains touch and aim. Use soft balls or rolled socks indoors."}];
+var PRE=[
+ {c:"bal",n:"Statue finish",l:1,need:[],d:"Make a slow swing with no ball, then freeze in your finish for 5 seconds. Do 10 in a row.",g:"Hold 5 seconds on all 10"},
+ {c:"bal",n:"One-leg balance",l:1,need:[],d:"Stand on one foot with your eyes on a spot on the wall for 20 seconds. Switch feet.",g:"3 steady rounds each foot"},
+ {c:"bal",n:"Pillow balance",l:2,need:["Pillow"],d:"Stand on a pillow with both feet. Make 10 slow swings and hold your finish for 3 seconds each time.",g:"No wobbling on 8 of 10"},
+ {c:"bal",n:"Slow-motion swing",l:2,need:[],d:"Swing in slow motion, taking 5 full seconds from start to finish, then hold your finish.",g:"5 slow swings with no wobble"},
+ {c:"bal",n:"Eyes-closed finish",l:3,need:[],d:"Make a slow swing, then close your eyes in your finish and count to 3. Keep a wall or a grown-up nearby.",g:"Hold 3 seconds on 5 swings"},
+ {c:"head",n:"Sticky-spot eyes",l:1,need:["Tape or string"],d:"Put a piece of tape on a wall at eye level. Keep your eyes on it during 10 slow practice swings.",g:"Eyes stay on the spot all 10 times"},
+ {c:"head",n:"Balloon head",l:1,need:[],d:"Imagine a balloon tied to the top of your head. Keep it from bouncing during 10 slow swings.",g:"10 smooth swings"},
+ {c:"head",n:"Calm head swings",l:2,need:["Paper cup","Chair"],d:"Set a cup on a chair at eye level and watch it through 10 slow swings, with no head wobble.",g:"10 swings with a still head"},
+ {c:"head",n:"Mirror check",l:2,need:["Mirror"],d:"Stand sideways to a mirror and make slow swings. Watch that your head stays at the same height.",g:"Head stays level on 8 of 10"},
+ {c:"head",n:"Shadow watch",l:3,need:[],d:"Stand where you can see your shadow on the ground or a wall. Make 10 swings and keep your head's shadow still.",g:"Shadow barely moves on 8 of 10"},
+ {c:"pos",n:"Arms hang down",l:1,need:[],d:"Stand tall, then bend from your hips until your arms hang straight down under your shoulders. Hold 5 seconds.",g:"10 good setups"},
+ {c:"pos",n:"Chair sit-back",l:1,need:["Chair"],d:"Stand with a chair behind you. Push your hips back until you lightly touch it, keeping knees soft and back straight. Hold 5 seconds.",g:"10 holds with a straight back"},
+ {c:"pos",n:"Wall tap",l:2,need:[],d:"Stand a step in front of a wall, facing away. Push your hips back until you lightly tap it, with soft knees.",g:"10 taps with a straight back"},
+ {c:"pos",n:"String line setup",l:2,need:["Tape or string"],d:"Lay a string toward a target. Line your feet up beside it and make 10 slow swings along the line.",g:"10 aligned setups"},
+ {c:"pos",n:"Broom spine check",l:3,need:["Broom or stick"],d:"Hold a broom against your back so it touches your head, upper back and bottom. Bend from the hips and keep all three touching.",g:"10 setups keeping contact"},
+ {c:"path",n:"Follow-through freeze",l:1,need:[],d:"After each slow swing, freeze with your hands high and your chest facing the target.",g:"10 frozen follow-throughs"},
+ {c:"path",n:"Towel whoosh",l:1,need:["Towel"],d:"Hold a rolled towel like a club and swing slowly. Listen for the whoosh at the bottom of the swing.",g:"10 whooshes at the bottom"},
+ {c:"path",n:"Pause at the top",l:2,need:[],d:"Swing back, pause for 1 second at the top, then swing through smoothly.",g:"10 smooth swings"},
+ {c:"path",n:"Broom gate",l:2,need:["Broom or stick","Chair"],d:"Set two chairs just wider than your swing arc. Swing the broom through without touching either chair.",g:"10 clean swings"},
+ {c:"path",n:"Brush the string",l:3,need:["Tape or string","Broom or stick"],d:"Lay a string on the floor. Swing the broom so its end brushes the string at the bottom of the swing.",g:"8 of 10 brush the string"},
+ {c:"tem",n:"Hum a slow song",l:1,need:[],d:"Hum a slow, steady tune and swing in time with it, never faster than the tune.",g:"10 swings in time"},
+ {c:"tem",n:"Count the tempo",l:2,need:[],d:"Swing back on a slow count of one-two-three and through on four. Keep every swing the same speed.",g:"15 smooth swings"},
+ {c:"tem",n:"Mississippi swings",l:2,need:[],d:"Swing back for one Mississippi and through for two Mississippi. Keep it the same each time.",g:"10 matching swings"},
+ {c:"tem",n:"Beat swing",l:3,need:[],d:"Clap a steady beat. Swing back on two claps and through on the third. Match the beat each time.",g:"15 swings in rhythm"},
+ {c:"tem",n:"Ramp it up",l:3,need:[],d:"Make 3 slow swings, then 3 medium, then 3 faster, keeping the same smooth rhythm.",g:"9 smooth swings"},
+ {c:"short",n:"Pillow putts",l:1,need:["Pillow","Small ball"],d:"Putt a soft ball along the floor to stop on a pillow 6 steps away.",g:"4 of 10 stop on the pillow"},
+ {c:"short",n:"Sock chip",l:1,need:["Rolled socks","Broom or stick"],d:"Gently swing a broom or stick to flick rolled socks into a box a few steps away.",g:"5 in the box"},
+ {c:"short",n:"Aim at the shoe",l:2,need:["Small ball"],d:"Set a shoe 5 steps away as a target and roll a soft ball so it touches the shoe.",g:"5 of 10 touch the shoe"},
+ {c:"short",n:"Towel landing zone",l:2,need:["Towel","Rolled socks"],d:"Lay a towel down as a target. Toss rolled socks underhand like a chip so they land on it.",g:"6 of 10 land on the towel"},
+ {c:"short",n:"Pressure putts",l:3,need:["Paper cup","Small ball"],d:"Lay a cup on its side 8 steps away and putt a soft ball into it. Count your tries.",g:"Make 3 in a row"}];
+function catName(id){return (CATS.filter(function(c){return c.id===id})[0]||{}).n||"Built for you"}
+function cnt(n){return n+(n==1?" drill":" drills")}
+function pObj(x){return {name:x.n,c:x.c,cat:catName(x.c),needs:x.need.join(", ")||"nothing",steps:x.d,goal:x.g,lvl:x.l}}
+function lastDone(){var m={};S.completed.forEach(function(r){if(!m[r.name]||r.date>m[r.name])m[r.name]=r.date});return m}
+function pickNext(c,target,exclude){var done=lastDone(),pool=PRE.filter(function(x){return x.c===c&&exclude.indexOf(x.n)<0}),fresh=pool.filter(function(x){return !done[x.n]}),
+ use=fresh.length?fresh:pool.sort(function(a,b){return (done[a.n]||0)-(done[b.n]||0)});
+ return use.slice().sort(function(a,b){return Math.abs(a.l-target)-Math.abs(b.l-target)})[0]}
+function actFor(c){var a=(S.act[c]||[]).filter(function(n){return PRE.some(function(x){return x.n===n&&x.c===c})});
+ while(a.length<2){var nx=pickNext(c,S.diff,a);if(!nx)break;a.push(nx.n)}S.act[c]=a;return a}
+function fallback(txt,avoid){txt=(txt||"").toLowerCase();avoid=avoid||[];
+ var have=Object.keys(KW).filter(function(k){return KW[k].some(function(w){return txt.indexOf(w)>-1})});
+ var l=PRE.filter(function(x){return x.need.every(function(n){return have.indexOf(n)>-1})&&x.l<=S.diff&&avoid.indexOf(x.n)<0});
+ l.sort(function(a,b){return (S.recent.indexOf(a.n)>-1)-(S.recent.indexOf(b.n)>-1)});
+ return l.slice(0,3).map(pObj)}
+function drillEl(x,onRate){var el=document.createElement("div");el.className="drill";el.dataset.name=x.name;
+ el.innerHTML='<b>'+esc(x.name)+'</b><div class="note">'+(x.lvl?"Level "+x.lvl+" · ":"")+'Needs: '+esc(x.needs||"nothing")+'</div><p style="margin:6px 0">'+esc(x.steps)+'</p><p class="note" style="margin:0 0 10px"><b>Goal:</b> '+esc(x.goal)+'</p><div class="act"><button class="btn alt sm">'+ic("check")+'Mark complete</button></div>';
+ el.querySelector("button").onclick=function(){var rec=finish(x),act=el.querySelector(".act");
+  act.innerHTML='<p class="note" style="margin:0 0 6px"><b>Nice work! +'+rec.xp+' XP'+(rec.up?' · Level up! You are now level '+rec.up+'.':'')+' How hard was it?</b></p><div class="rate"><button class="btn alt sm" data-d="1">Too easy</button><button class="btn alt sm" data-d="0">Just right</button><button class="btn alt sm" data-d="-1">Too hard</button></div>';
+  act.querySelectorAll("button").forEach(function(b){b.onclick=function(){var d=+b.dataset.d;rec.rating=d>0?"easy":d<0?"hard":"right";S.diff=Math.max(1,Math.min(3,S.diff+d));save();renderDone();
+   toast(ic("check")+(d>0?" Got it. Your next drill will be harder.":d<0?" Got it. Your next drill will be easier.":" Got it. Same level next time."));onRate(el,x,d)}})};
+ return el}
+function presetRate(el,x,d){var det=el.closest("details"),a=S.act[x.c],i=a.indexOf(x.name),nx=pickNext(x.c,Math.max(1,Math.min(3,x.lvl+d)),a);
+ if(nx){a[i]=nx.n;el.replaceWith(drillEl(pObj(nx),presetRate))}else{a.splice(i,1);el.remove()}
+ save();det.querySelector("summary .note").textContent=cnt(a.length)}
+function renderPre(){var box=$("pre");box.querySelectorAll(".cat").forEach(function(e){e.remove()});
+ CATS.forEach(function(c){var a=actFor(c.id),det=document.createElement("details");det.className="cat";
+  det.innerHTML='<summary><span>'+ic(c.i)+c.n+'</span><span class="note">'+cnt(a.length)+'</span></summary><p class="note" style="margin:4px 0 0">'+c.t+'</p>';
+  a.forEach(function(n){var x=PRE.filter(function(q){return q.n===n})[0];det.appendChild(drillEl(pObj(x),presetRate))});box.appendChild(det)});save()}
+var lastTxt="";
+async function aiDrills(txt,n,extra){var nt=notes().map(function(x){return "- "+x.text}).join("\n");
+ var p=handTxt()+"\n"+(nt?"Your coach notes about this golfer (focus drills on what they need):\n"+nt+"\n":"")+'Create exactly '+n+' '+(n>1?"drills":"drill")+'. Difficulty level '+S.diff+' of 3 (1 easy, 3 hard). '+(extra||"")+'\nDo not repeat these recent drills: '+(S.recent.slice(-6).join(", ")||"none")+'.\nThe child said: "'+txt.replace(/"/g,"'")+'"';
+ var o=await runUntil("drills",[{type:"text",text:p}],{submit_drills:async function(){return {text:"ok"}}},"submit_drills",3);
+ return (o.drills||[]).slice(0,n).map(function(d){return {name:String(d.name||""),needs:String(d.needs||"nothing"),steps:String(d.steps||""),goal:String(d.goal||"")}})}
+function showDrills(list){$("dcard").hidden=false;var box=$("drills");box.innerHTML="";
+ if(!list.length){box.innerHTML='<p>I need a bit more to go on. Try telling me what you have, like a towel, a cup or a ball.</p>';return}
+ list.forEach(function(x){x.cat="Built for you";box.appendChild(drillEl(x,customRate))});$("dcard").scrollIntoView({behavior:"smooth"})}
+async function customRate(el,x,d){var avoid=[].map.call($("drills").children,function(c){return c.dataset.name}),nx=null;
+ el.className="drill";el.innerHTML='<p class="note" style="margin:0">Finding your next drill...</p>';
+ try{nx=(await aiDrills(lastTxt,1,"The child just finished "+x.name+" and found it "+(d>0?"too easy":d<0?"too hard":"about right")+", so make the new drill "+(d>0?"noticeably harder":d<0?"easier":"similar in difficulty")+". "))[0]}catch(e){}
+ if(!nx)nx=fallback(lastTxt,avoid)[0];
+ if(nx){nx.cat="Built for you";el.replaceWith(drillEl(nx,customRate))}else el.remove()}
+$("mk").onclick=async function(){var txt=$("have").value.trim(),st=$("dstat");st.className="note";
+ if(!txt){st.className="note err";st.textContent="Type where you are and what you have first.";return}
+ lastTxt=txt;$("mk").disabled=true;st.textContent="Building your drills...";
+ try{showDrills(await aiDrills(txt,3));st.textContent=""}
+ catch(e){showDrills(fallback(txt));st.textContent="AI wasn't available, so I picked from my built-in drills."}
+ finally{$("mk").disabled=false}};
+function finish(x){S.done++;S.names[x.name.toLowerCase()]=1;S.recent.push(x.name);S.recent=S.recent.slice(-12);
+ var t=new Date().toDateString(),y=new Date(Date.now()-864e5).toDateString();
+ if(S.last!==t){S.days++;S.streak=(S.last===y)?S.streak+1:1;S.last=t}
+ S.best=Math.max(S.best,S.streak);
+ var rec={name:x.name,cat:x.cat||"Built for you",lvl:x.lvl||0,date:Date.now(),rating:""};S.completed.unshift(rec);if(S.completed.length>500)S.completed.length=500;
+ var xp=10+(x.lvl||1)*2;rec.xp=xp;rec.up=addXp(xp);save();checkBadges();renderDone();return rec}
+var RL={easy:"Too easy",right:"Just right",hard:"Too hard","":"Not rated"},dshow=10;
+function renderDone(){var a=S.completed;$("dnote").textContent=a.length?cnt(a.length)+" completed. Newest first.":"";
+ $("dlist").innerHTML=a.length?a.slice(0,dshow).map(function(r){return '<div class="drill" style="margin:0 0 10px"><div class="row"><b>'+esc(r.name)+'</b><span class="pill">'+RL[r.rating||""]+'</span></div><div class="note">'+esc(r.cat)+(r.lvl?" · Level "+r.lvl:"")+" · "+new Date(r.date).toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"})+'</div></div>'}).join(""):'<p class="note" style="margin:0">No completed drills yet. Finish a drill and it will show up here.</p>';
+ $("dmore").hidden=a.length<=dshow}
+$("dmore").onclick=function(){dshow+=10;renderDone()};
+
+/* ---- achievements ---- */
+function B(n,i,k,t){return {n:n,i:i,k:k,t:t}}
+var VAL={done:function(){return S.done},best:function(){return S.best},checks:function(){return S.checks},level:function(){return S.level},uniq:function(){return Object.keys(S.names||{}).length},days:function(){return S.days}};
+var BADGES=[B("First Tee","flag","done",1),B("Camera Ready","video","checks",1),B("Warmed Up","target","done",5),B("On a Roll","zap","best",3),B("Mix It Up","spark","uniq",5),
+ B("Double Digits","clip","done",10),B("Showing Up","cal","days",10),B("Swing Scholar","film","checks",3),B("Week Warrior","flame","best",7),B("Regular","check","done",25),
+ B("Variety Pack","spark","uniq",15),B("Fortnight Focus","flame","best",14),B("Film Study","film","checks",10),B("Half Century","dumb","done",50),B("Tireless Worker","crown","best",30),B("Regular Visitor","cal","days",50),
+ B("Swing Doctor","video","checks",25),B("Centurion","award","done",100),B("Drill Master","target","uniq",30),B("Iron Will","shield","best",60),B("Dedicated","dumb","done",250),B("Tour Analyst","film","checks",50),
+ B("Unstoppable","zap","best",100),B("Full Season","cal","days",100),B("Grinder","dumb","done",500),B("Half-Year Hero","shield","best",180),B("Year-Round Champion","crown","best",365),B("Living Legend","trophy","done",1000)];
+function desc(b){var t=b.t.toLocaleString(),m={done:"Complete "+t+(b.t==1?" drill":" drills"),best:t+"-day practice streak",checks:"Get AI feedback on "+t+(b.t==1?" swing":" swings"),level:"Reach level "+t,uniq:"Try "+t+" different drills",days:"Practice on "+t+" different days"};return m[b.k]}
+function need(n){return Math.round(10*Math.pow(n,1.5))}
+function lvInfo(){var x=S.xp||0,n=1;while(n<50&&x>=need(n)){x-=need(n);n++}return {n:n,cur:x,need:n<50?need(n):0}}
+function addXp(n){var a=lvInfo().n;S.xp=(S.xp||0)+n;var b=lvInfo().n;save();return b>a?b:0}
+function swingXp(){var t=new Date().toDateString();if(S.sd!==t){S.sd=t;S.sn=0}
+ if(S.sn>=3)return " (You've hit today's swing XP limit.)";S.sn++;var u=addXp(15);if(u)toast(ic("trophy")+" Level up! You're now level "+u);return " +15 XP"+(u?" · Level up! You are now level "+u+".":"")}
+function curStreak(){var t=new Date().toDateString(),y=new Date(Date.now()-864e5).toDateString();return(S.last===t||S.last===y)?S.streak:0}
+function owned(){return BADGES.filter(function(b){return VAL[b.k]()>=b.t}).map(function(b){return b.n})}
+function checkBadges(){var o=owned(),nw=o.filter(function(n){return S.seen.indexOf(n)<0});S.seen=o;save();
+ if(nw.length)toast(ic("trophy")+" Achievement unlocked: <b>"+nw[0]+"</b>")}
+function badgeHtml(x){var b=x.b;
+ return '<div class="badge'+(x.on?" on":"")+(x.i>=BADGES.length-5?" lg":"")+'"><div class="ic">'+ic(x.on?b.i:"lock")+'</div><b>'+b.n+'</b><div class="d">'+desc(b)+'</div>'+
+ (x.on?'':'<div class="meter"><i style="width:'+Math.round(x.p*100)+'%"></i></div><span class="note">'+x.v.toLocaleString()+' / '+b.t.toLocaleString()+'</span>')+'</div>'}
+function renderProg(){if(!S)return;$("pname").textContent=DB.me.name+"'s Progress";var li=lvInfo();$("s1").textContent=S.done;$("s2").textContent=li.n;$("s3").textContent=curStreak();
+ $("lvbar").innerHTML=li.need?'<div class="row"><b>Level '+li.n+'</b><span class="note">'+li.cur+' / '+li.need+' XP to level '+(li.n+1)+'</span></div><div class="meter lg"><i style="width:'+Math.round(li.cur/li.need*100)+'%"></i></div><p class="note" style="margin:0">Earn XP from drills and swing checks. Each new level takes a bit more XP.</p>':'<b>Max level reached!</b>';
+ var all=BADGES.map(function(b,i){var v=Math.min(VAL[b.k](),b.t);return {b:b,i:i,v:v,p:v/b.t,on:v>=b.t}}),
+  locked=all.filter(function(x){return !x.on}),got=all.filter(function(x){return x.on}),
+  nx=locked.slice().sort(function(a,c){return c.p-a.p||a.i-c.i}).slice(0,2),rest=locked.filter(function(x){return nx.indexOf(x)<0});
+ function g(t){return '<p class="note" style="grid-column:1/-1;margin:0">'+t+'</p>'}
+ $("bc").textContent=got.length+" of "+BADGES.length;
+ $("next").innerHTML=nx.length?nx.map(badgeHtml).join(""):g("Every achievement is done. Legend!");
+ $("ach").innerHTML=rest.length?rest.map(badgeHtml).join(""):g("Nothing else to chase right now.");
+ $("badges").innerHTML=got.length?got.map(badgeHtml).join(""):g("Badges you earn will show up here.")}
+renderProfiles();
+</script>
+</body></html>
